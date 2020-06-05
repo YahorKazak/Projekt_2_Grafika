@@ -23,7 +23,7 @@ namespace Projekt_2
             y.X = x.X * matrixProj.M11 + x.Y * matrixProj.M21 + x.Z * matrixProj.M31 + matrixProj.M41;
             y.Y = x.X * matrixProj.M12 + x.Y * matrixProj.M22 + x.Z * matrixProj.M32 + matrixProj.M42;
             y.Z = x.X * matrixProj.M13 + x.Y * matrixProj.M23 + x.Z * matrixProj.M33 + matrixProj.M43;
-
+            
             float width = x.X * matrixProj.M14 + x.Y * matrixProj.M24 + x.Z * matrixProj.M34 + matrixProj.M44;
 
             if (width != 0.0f)
@@ -73,6 +73,16 @@ namespace Projekt_2
             Cube.Add(new trójkąt(new Vector3(1, 0, 1), new Vector3(0, 0, 0), new Vector3(1, 0, 0)));
         }
 
+
+        public void UserUpdate(TimeSpan time)
+        {
+            bm = new Bitmap(pb.Width, pb.Height);
+
+            foreach (trójkąt item in Cube)
+            {
+
+            }
+        }
 
 
        
