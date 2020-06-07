@@ -11,7 +11,7 @@ namespace Projekt_2
 {
     class E3D
     {
-      
+       
        Matrix4x4 matrixProj;
        Bitmap bm;
        PictureBox pb;
@@ -54,23 +54,38 @@ namespace Projekt_2
             Camera = new Vector3(0, 0, 0);
             Cube = new List<trójkąt>();
 
-            Cube.Add(new trójkąt( new Vector3(0, 0, 0), new Vector3(0, 1, 0),  new Vector3(1, 1, 0)));
-            Cube.Add(new trójkąt(new Vector3(0, 0, 0), new Vector3(1, 1, 0), new Vector3(1, 0, 0)));
+            Cube.Add(new trójkąt( new Vector3(0f, 0f, 0f), new Vector3(0f, 1f, 0f),  new Vector3(1f, 1f, 0f)));
+            Cube.Add(new trójkąt(new Vector3(0f, 0f, 0f), new Vector3(1f, 1f, 0f), new Vector3(1f, 0f, 0f)));
 
-            Cube.Add(new trójkąt(new Vector3(1, 0, 0), new Vector3(1, 1, 0), new Vector3(1, 1, 1)));
-            Cube.Add(new trójkąt(new Vector3(1, 0, 0), new Vector3(1, 1, 1), new Vector3(1, 0, 1)));
+            Cube.Add(new trójkąt(new Vector3(1f, 0f, 0f), new Vector3(1f, 1f, 0f), new Vector3(1f, 1f, 1f)));
+            Cube.Add(new trójkąt(new Vector3(1f, 0f, 0f), new Vector3(1f, 1f, 1f), new Vector3(1f, 0f, 1f)));
 
-            Cube.Add(new trójkąt(new Vector3(1, 0, 1), new Vector3(1, 1, 1), new Vector3(0, 1, 1)));
-            Cube.Add(new trójkąt(new Vector3(1, 0, 1), new Vector3(0, 1, 1), new Vector3(0, 0, 1)));
+            Cube.Add(new trójkąt(new Vector3(1f, 0f, 1f), new Vector3(1f, 1f, 1f), new Vector3(0f, 1f, 1f)));
+            Cube.Add(new trójkąt(new Vector3(1f, 0f, 1f), new Vector3(0f, 1f, 1f), new Vector3(0f, 0f, 1f)));
 
-            Cube.Add(new trójkąt(new Vector3(0, 0, 1), new Vector3(0, 1, 1), new Vector3(0, 1, 0)));
-            Cube.Add(new trójkąt(new Vector3(0, 0, 1), new Vector3(0, 1, 0), new Vector3(0, 0, 0)));
+            Cube.Add(new trójkąt(new Vector3(0f, 0f, 1f), new Vector3(0f, 1f, 1f), new Vector3(0f, 1f, 0f)));
+            Cube.Add(new trójkąt(new Vector3(0f, 0f, 1f), new Vector3(0f, 1f, 0f), new Vector3(0f, 0f, 0f)));
 
-            Cube.Add(new trójkąt(new Vector3(0, 1, 0), new Vector3(0, 1, 1), new Vector3(1, 1, 1)));
-            Cube.Add(new trójkąt(new Vector3(0, 1, 0), new Vector3(1, 1, 1), new Vector3(1, 1, 0)));
+            Cube.Add(new trójkąt(new Vector3(0f, 1f, 0f), new Vector3(0f, 1f, 1f), new Vector3(1f, 1f, 1f)));
+            Cube.Add(new trójkąt(new Vector3(0f, 1f, 0f), new Vector3(1f, 1f, 1f), new Vector3(1f, 1f, 0f)));
 
-            Cube.Add(new trójkąt(new Vector3(1, 0, 1), new Vector3(0, 0, 1), new Vector3(0, 0, 0)));
-            Cube.Add(new trójkąt(new Vector3(1, 0, 1), new Vector3(0, 0, 0), new Vector3(1, 0, 0)));
+            Cube.Add(new trójkąt(new Vector3(1f, 0f, 1f), new Vector3(0f, 0f, 1f), new Vector3(0f, 0f, 0f)));
+            Cube.Add(new trójkąt(new Vector3(1f, 0f, 1f), new Vector3(0f, 0f, 0f), new Vector3(1f, 0f, 0f)));
+
+            //matrixProj
+            float fN = 0.1f;
+            float fFr = 1000.0f;
+            float fFv = 90.0f;
+            float fAspctRat= (float)image.Height / (float)image.Width;
+            float fFRad = 1.0f / (float)Math.Tan(fFv * 0.5f / 180.0f * (float)(Math.PI));
+
+            matrixProj.M11 = fAspctRat * fFr;
+            matrixProj.M22 = fFRad;
+            matrixProj.M33 = fFr /(fFr - fN);
+            matrixProj.M43 = (-fFr * fN)/(fFr - fN);
+            matrixProj.M34 = 1.0f;
+            matrixProj.M44 = 0.0f;
+            
         }
 
 
@@ -80,6 +95,10 @@ namespace Projekt_2
 
             foreach (trójkąt item in Cube)
             {
+                trójkąt Projected;
+                MatrixMnożenia(matrixProj,item[0],Projected[0]);
+                MatrixMnożenia(matrixProj,item[1],Projected[1]);
+                MatrixMnożenia(matrixProj,item[2],Projected[2]);
 
             }
         }
