@@ -11,7 +11,7 @@ namespace Projekt_2
 {
     class E3D
     {
-       
+       DrawL Line = new DrawL();
        Matrix4x4 matrixProj;
        Bitmap bm;
        PictureBox pb;
@@ -20,8 +20,8 @@ namespace Projekt_2
 
            private void MatrixMnożenia(Matrix4x4 matrixProj,Vector3 x,Vector3 y)
            {
-            y.X = x.X * matrixProj.M11 + x.Y * matrixProj.M21 + x.Z * matrixProj.M31 + matrixProj.M41;
-            y.Y = x.X * matrixProj.M12 + x.Y * matrixProj.M22 + x.Z * matrixProj.M32 + matrixProj.M42;
+            y.X = (x.X * matrixProj.M11 + x.Y * matrixProj.M21 + x.Z * matrixProj.M31 + matrixProj.M41);
+            y.Y = (x.X * matrixProj.M12 + x.Y * matrixProj.M22 + x.Z * matrixProj.M32 + matrixProj.M42);
             y.Z = x.X * matrixProj.M13 + x.Y * matrixProj.M23 + x.Z * matrixProj.M33 + matrixProj.M43;
             
             float width = x.X * matrixProj.M14 + x.Y * matrixProj.M24 + x.Z * matrixProj.M34 + matrixProj.M44;
@@ -34,16 +34,44 @@ namespace Projekt_2
             }
 
            }
-
-           protected class trójkąt
+           private void MatrixMnożenia1(Matrix4x4 matrixProj, trójkąt x, trójkąt y)
            {
-            List<Vector3> tlist;
+            for (int i = 0; i < 3; i++)
+            {
+                y.tlist[i].X = x.tlist[i].X * matrixProj.M11 + x.tlist[i].Y * matrixProj.M21 + x.tlist[i].Z * matrixProj.M31 + matrixProj.M41;
+                y.tlist[i].Y = x.tlist[i].X * matrixProj.M12 + x.tlist[i].Y * matrixProj.M22 + x.tlist[i].Z * matrixProj.M32 + matrixProj.M42;
+                y.tlist[i].Z = x.tlist[i].X * matrixProj.M13 + x.tlist[i].Y * matrixProj.M23 + x.tlist[i].Z * matrixProj.M33 + matrixProj.M43;
+
+                float w = x.tlist[i].X * matrixProj.M14 + x.tlist[i].Y * matrixProj.M24 + x.tlist[i].Z * matrixProj.M34 + matrixProj.M44;
+
+                if (w != 0.0f)
+                {
+                    y.tlist[i].X /= w; y.tlist[i].Y /= w; y.tlist[i].Z /= w;
+                }
+            }
+           }
+
+            private void Scale(trójkąt x)
+           {
+             for (int i = 0; i < 3; i++)
+             {
+                x.tlist[i].X += 1.0f;
+                x.tlist[i].Y += 1.0f;
+                x.tlist[i].X *= 0.3f * (float)pb.Width;
+                x.tlist[i].Y *= 0.3f * (float)pb.Height;
+             }
+           
+           }
+
+           protected   class trójkąt
+           {
+            public Vector3[] tlist;
             public trójkąt(Vector3 first, Vector3 second,Vector3 third)
             {
-                tlist = new List<Vector3>();
-                tlist.Add(first);
-                tlist.Add(second);
-                tlist.Add(third);
+                tlist = new Vector3[3];
+                tlist[0]=first;
+                tlist[1]=second;
+                tlist[2]=third;
             }
            }
 
@@ -79,13 +107,13 @@ namespace Projekt_2
             float fAspctRat= (float)image.Height / (float)image.Width;
             float fFRad = 1.0f / (float)Math.Tan(fFv * 0.5f / 180.0f * (float)(Math.PI));
 
-            matrixProj.M11 = fAspctRat * fFr;
+            matrixProj.M11 = fAspctRat * fFRad;
             matrixProj.M22 = fFRad;
             matrixProj.M33 = fFr /(fFr - fN);
             matrixProj.M43 = (-fFr * fN)/(fFr - fN);
             matrixProj.M34 = 1.0f;
             matrixProj.M44 = 0.0f;
-            
+
         }
 
 
@@ -95,15 +123,27 @@ namespace Projekt_2
 
             foreach (trójkąt item in Cube)
             {
-                trójkąt Projected;
-                MatrixMnożenia(matrixProj,item[0],Projected[0]);
-                MatrixMnożenia(matrixProj,item[1],Projected[1]);
-                MatrixMnożenia(matrixProj,item[2],Projected[2]);
+                
+                trójkąt Projected = new trójkąt(new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+                
+                MatrixMnożenia1(matrixProj, item, Projected);
+              
 
+                Scale(Projected);
+               
+
+
+                Line.Przyrostowy(bm, (int)Projected.tlist[0].X, (int)Projected.tlist[0].Y, (int)Projected.tlist[1].X, (int)Projected.tlist[1].Y);
+                Line.Przyrostowy(bm, (int)Projected.tlist[1].X, (int)Projected.tlist[1].Y, (int)Projected.tlist[2].X, (int)Projected.tlist[2].Y);
+                Line.Przyrostowy(bm, (int)Projected.tlist[2].X, (int)Projected.tlist[2].Y, (int)Projected.tlist[0].X, (int)Projected.tlist[0].Y);
+
+               
             }
+            pb.Image = bm;
+           
         }
 
-
+        
        
     }
 }

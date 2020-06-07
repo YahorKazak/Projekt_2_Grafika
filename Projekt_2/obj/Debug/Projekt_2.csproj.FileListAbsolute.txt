@@ -9,3 +9,14 @@ C:\Users\Egor\Desktop\rysowanie odcinka\Projekt_2\Projekt_2\obj\Debug\Projekt_2.
 C:\Users\Egor\Desktop\rysowanie odcinka\Projekt_2\Projekt_2\obj\Debug\Projekt_2.csproj.CopyComplete
 C:\Users\Egor\Desktop\rysowanie odcinka\Projekt_2\Projekt_2\obj\Debug\Projekt_2.exe
 C:\Users\Egor\Desktop\rysowanie odcinka\Projekt_2\Projekt_2\obj\Debug\Projekt_2.pdb
+C:\Users\Egor\Desktop\GitHub\Projekt_2_Grafika\Projekt_2\bin\Debug\Projekt_2.exe.config
+C:\Users\Egor\Desktop\GitHub\Projekt_2_Grafika\Projekt_2\bin\Debug\Projekt_2.exe
+C:\Users\Egor\Desktop\GitHub\Projekt_2_Grafika\Projekt_2\bin\Debug\Projekt_2.pdb
+C:\Users\Egor\Desktop\GitHub\Projekt_2_Grafika\Projekt_2\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\Egor\Desktop\GitHub\Projekt_2_Grafika\Projekt_2\obj\Debug\Projekt_2.csprojAssemblyReference.cache
+C:\Users\Egor\Desktop\GitHub\Projekt_2_Grafika\Projekt_2\obj\Debug\Projekt_2.Form1.resources
+C:\Users\Egor\Desktop\GitHub\Projekt_2_Grafika\Projekt_2\obj\Debug\Projekt_2.Properties.Resources.resources
+C:\Users\Egor\Desktop\GitHub\Projekt_2_Grafika\Projekt_2\obj\Debug\Projekt_2.csproj.GenerateResource.cache
+C:\Users\Egor\Desktop\GitHub\Projekt_2_Grafika\Projekt_2\obj\Debug\Projekt_2.csproj.CopyComplete
+C:\Users\Egor\Desktop\GitHub\Projekt_2_Grafika\Projekt_2\obj\Debug\Projekt_2.exe
+C:\Users\Egor\Desktop\GitHub\Projekt_2_Grafika\Projekt_2\obj\Debug\Projekt_2.pdb
