@@ -12,10 +12,11 @@ namespace Projekt_2
     class E3D
     {
        DrawL Line = new DrawL();
-       Matrix4x4 matrixProj;
+       Matrix4x4 matrixProj,MRotZ, MRotX;
+       
        Bitmap bm;
        PictureBox pb;
-
+       float Theta;
        Vector3 Camera;
 
            private void MatrixMnożenia(Matrix4x4 matrixProj,Vector3 x,Vector3 y)
@@ -50,13 +51,21 @@ namespace Projekt_2
                 }
             }
            }
+           
+           private void TranslatedZ(trójkąt y,trójkąt x)
+           {
+            for (int i = 0; i < 3; i++)
+            {
+                y.tlist[i].Z = x.tlist[i].Z + 5.0f;
+            }
+           }
 
             private void Scale(trójkąt x)
            {
              for (int i = 0; i < 3; i++)
              {
-                x.tlist[i].X += 1.0f;
-                x.tlist[i].Y += 1.0f;
+                x.tlist[i].X += 2.0f;
+                x.tlist[i].Y += 2.0f;
                 x.tlist[i].X *= 0.3f * (float)pb.Width;
                 x.tlist[i].Y *= 0.3f * (float)pb.Height;
              }
@@ -82,11 +91,11 @@ namespace Projekt_2
             Camera = new Vector3(0, 0, 0);
             Cube = new List<trójkąt>();
 
-            Cube.Add(new trójkąt( new Vector3(0f, 0f, 0f), new Vector3(0f, 1f, 0f),  new Vector3(1f, 1f, 0f)));
-            Cube.Add(new trójkąt(new Vector3(0f, 0f, 0f), new Vector3(1f, 1f, 0f), new Vector3(1f, 0f, 0f)));
+            Cube.Add(new trójkąt( new Vector3(0, 0, 0), new Vector3(0, 1, 0),  new Vector3(1, 1, 0)));
+            Cube.Add(new trójkąt(new Vector3(0, 0, 0), new Vector3(1, 1, 0), new Vector3(1, 0, 0)));
 
-            Cube.Add(new trójkąt(new Vector3(1f, 0f, 0f), new Vector3(1f, 1f, 0f), new Vector3(1f, 1f, 1f)));
-            Cube.Add(new trójkąt(new Vector3(1f, 0f, 0f), new Vector3(1f, 1f, 1f), new Vector3(1f, 0f, 1f)));
+            Cube.Add(new trójkąt(new Vector3(1, 0, 0), new Vector3(1, 1, 0), new Vector3(1, 1, 1)));
+            Cube.Add(new trójkąt(new Vector3(1, 0, 0), new Vector3(1, 1, 1), new Vector3(1, 0, 1)));
 
             Cube.Add(new trójkąt(new Vector3(1f, 0f, 1f), new Vector3(1f, 1f, 1f), new Vector3(0f, 1f, 1f)));
             Cube.Add(new trójkąt(new Vector3(1f, 0f, 1f), new Vector3(0f, 1f, 1f), new Vector3(0f, 0f, 1f)));
@@ -121,12 +130,47 @@ namespace Projekt_2
         {
             bm = new Bitmap(pb.Width, pb.Height);
 
+            double Etime = time.TotalMilliseconds / 1000;
+
+            
+            
+           
+            Theta += 1.0f * (float)Etime;
+
+            // Rotation X
+            MRotX.M11 = 1;
+            MRotX.M22 = (float)Math.Cos(Theta * 0.5f);
+            MRotX.M23 = (float)Math.Sin(Theta * 0.5f);
+            MRotX.M32 = -(float)Math.Sin(Theta * 0.5f);
+            MRotX.M33 = (float)Math.Cos(Theta * 0.5f);
+            MRotX.M44 = 1;
+
+            // Rotation Z
+            MRotZ.M11 = (float)Math.Cos(Theta);
+            MRotZ.M12 = (float)Math.Sin(Theta);
+            MRotZ.M21 = (float)-Math.Sin(Theta);
+            MRotZ.M22 = (float)Math.Cos(Theta);
+            MRotZ.M33 = 1;
+            MRotZ.M44 = 1;
+
+
             foreach (trójkąt item in Cube)
             {
+                trójkąt Projected, Translated ,RotZX, RotZ;
+                RotZ = new trójkąt(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+                RotZX = new trójkąt(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+
+                MatrixMnożenia1(MRotZ, item, RotZ);
+
+                MatrixMnożenia1(MRotX, RotZ, RotZX);
+
+
+                Translated = RotZX;
+                TranslatedZ(Translated, RotZX);
+
+                Projected = new trójkąt(new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
                 
-                trójkąt Projected = new trójkąt(new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
-                
-                MatrixMnożenia1(matrixProj, item, Projected);
+                MatrixMnożenia1(matrixProj, Translated, Projected);
               
 
                 Scale(Projected);
