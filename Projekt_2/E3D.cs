@@ -38,6 +38,7 @@ namespace Projekt_2
     }
     class E3D
     {
+       Functions functions = new Functions();
        DrawL Line = new DrawL();
        Matrix4x4 matrixProj,MRotZ, MRotX;
        
@@ -45,28 +46,29 @@ namespace Projekt_2
        PictureBox pb;
        float Theta;
        Vector4 Camera;
+       Vector4 Look;
+        float fPlayer;
 
-        
 
-           private void MatrixMnożenia(Matrix4x4 matrixProj,Vector3 x,Vector3 y)
-           {
-            y.X = (x.X * matrixProj.M11 + x.Y * matrixProj.M21 + x.Z * matrixProj.M31 + matrixProj.M41);
-            y.Y = (x.X * matrixProj.M12 + x.Y * matrixProj.M22 + x.Z * matrixProj.M32 + matrixProj.M42);
-            y.Z = x.X * matrixProj.M13 + x.Y * matrixProj.M23 + x.Z * matrixProj.M33 + matrixProj.M43;
-            
-            float width = x.X * matrixProj.M14 + x.Y * matrixProj.M24 + x.Z * matrixProj.M34 + matrixProj.M44;
+        //private void MatrixMnożenia(Matrix4x4 matrixProj, Vector4 x, Vector4 y)
+        //{
+        //    y.X = (x.X * matrixProj.M11 + x.Y * matrixProj.M21 + x.Z * matrixProj.M31 + matrixProj.M41);
+        //    y.Y = (x.X * matrixProj.M12 + x.Y * matrixProj.M22 + x.Z * matrixProj.M32 + matrixProj.M42);
+        //    y.Z = x.X * matrixProj.M13 + x.Y * matrixProj.M23 + x.Z * matrixProj.M33 + matrixProj.M43;
 
-            if (width != 0.0f)
-            {
-                y.X /= width;
-                y.Y /= width;
-                y.Z /= width;
-            }
+        //    float width = x.X * matrixProj.M14 + x.Y * matrixProj.M24 + x.Z * matrixProj.M34 + matrixProj.M44;
 
-           }
+        //    if (width != 0.0f)
+        //    {
+        //        y.X /= width;
+        //        y.Y /= width;
+        //        y.Z /= width;
+        //    }
 
-           //konwertowanie trójkąta na ekran za pomocą Mproj 
-           private void MatrixMnożenia1(Matrix4x4 matrixProj, trójkąt x, trójkąt y)
+        //}
+
+        //konwertowanie trójkąta na ekran za pomocą Mproj 
+        private void MatrixMnożenia1(Matrix4x4 matrixProj, trójkąt x, trójkąt y)
            {
             for (int i = 0; i < 3; i++)
             {
@@ -118,43 +120,17 @@ namespace Projekt_2
             this.pb = image;
             Camera = new Vector4(0,0,0,1);
             Blender blender = new Blender();
-            blender.LoadFigure();
-            //Camera = new Vector4(0, 0, 0,0);
+            blender.LoadFigure();        
             Cube = blender.Figures;
-
-            ////координаты точек куба
-            //Cube.Add(new trójkąt( new Vector4(0, 0, 0,1), new Vector4(0, 1, 0,1),  new Vector4(1, 1, 0,1)));
-            //Cube.Add(new trójkąt(new Vector4(0, 0, 0,1), new Vector4(1, 1, 0,1), new Vector4(1, 0, 0,1)));
-
-            //Cube.Add(new trójkąt(new Vector4(1, 0, 0,1), new Vector4(1, 1, 0,1), new Vector4(1, 1, 1,1)));
-            //Cube.Add(new trójkąt(new Vector4(1, 0, 0,1), new Vector4(1, 1, 1,1), new Vector4(1, 0, 1,1)));
-
-            //Cube.Add(new trójkąt(new Vector4(1f, 0f, 1f,1), new Vector4(1f, 1f, 1f,1), new Vector4(0f, 1f, 1f,1)));
-            //Cube.Add(new trójkąt(new Vector4(1f, 0f, 1f,1), new Vector4(0f, 1f, 1f,1), new Vector4(0f, 0f, 1f,1)));
-
-            //Cube.Add(new trójkąt(new Vector4(0f, 0f, 1f,1), new Vector4(0f, 1f, 1f,1), new Vector4(0f, 1f, 0f,1)));
-            //Cube.Add(new trójkąt(new Vector4(0f, 0f, 1f,1), new Vector4(0f, 1f, 0f,1), new Vector4(0f, 0f, 0f,1)));
-
-            //Cube.Add(new trójkąt(new Vector4(0f, 1f, 0f,1), new Vector4(0f, 1f, 1f,1), new Vector4(1f, 1f, 1f,1)));
-            //Cube.Add(new trójkąt(new Vector4(0f, 1f, 0f,1), new Vector4(1f, 1f, 1f,1), new Vector4(1f, 1f, 0f,1)));
-
-            //Cube.Add(new trójkąt(new Vector4(1f, 0f, 1f,1), new Vector4(0f, 0f, 1f,1), new Vector4(0f, 0f, 0f,1)));
-            //Cube.Add(new trójkąt(new Vector4(1f, 0f, 1f,1), new Vector4(0f, 0f, 0f,1), new Vector4(1f, 0f, 0f,1)));
-
+        
             //matrixProj
             float fN = 0.1f;
             float fFr = 1000.0f;
             float fFv = 90.0f;
             float fAspctRat= (float)image.Height / (float)image.Width;
-            float fFRad = 1.0f / (float)Math.Tan(fFv * 0.5f / 180.0f * (float)(Math.PI));
 
-            matrixProj.M11 = fAspctRat * fFRad;
-            matrixProj.M22 = fFRad;
-            matrixProj.M33 = fFr /(fFr - fN);
-            matrixProj.M43 = (-fFr * fN)/(fFr - fN);
-            matrixProj.M34 = 1.0f;
-            matrixProj.M44 = 0.0f;
-            //.
+            matrixProj =  functions.MProjection(fFv, fAspctRat, fN, fFr);
+           
         }
         public void FillFigure(trójkąt trójkąt, Bitmap bm)
         {
@@ -200,42 +176,75 @@ namespace Projekt_2
 
             double Etime = time.TotalMilliseconds / 1000;
 
-            
-            
-           
-            Theta += 0.5f * (float)Etime;
+
+            //Theta += 0.5f * (float)Etime;
+
+            if ((Keyboard.GetKeyStates(Key.Up) & KeyStates.Down) > 0)
+            {
+                Camera.Y += 0.01f + (float)Etime;
+            }
+            if ((Keyboard.GetKeyStates(Key.Down) & KeyStates.Down) > 0)
+            {
+                Camera.Y -= 0.01f + (float)Etime;
+            }
+
+            if ((Keyboard.GetKeyStates(Key.Left) & KeyStates.Down) > 0)
+            {
+                Camera.X += 0.01f + (float)Etime;
+            }
+            if ((Keyboard.GetKeyStates(Key.Right) & KeyStates.Down) > 0)
+            {
+                Camera.X -= 0.01f + (float)Etime;
+            }
+
+            Vector4 Moving = Look * (8.0f * (float)Etime);
+
+            if ((Keyboard.GetKeyStates(Key.W) & KeyStates.Down) > 0)
+            {
+                Camera = functions.addVector(Camera, Moving);
+            }
+            if ((Keyboard.GetKeyStates(Key.S) & KeyStates.Down) > 0)
+            {
+                Camera = functions.subVector(Camera, Moving);
+            }
+
+
+            if ((Keyboard.GetKeyStates(Key.A) & KeyStates.Down) > 0)
+            {
+                fPlayer += 0.05f + (float)Etime;
+            }
+            if ((Keyboard.GetKeyStates(Key.D) & KeyStates.Down) > 0)
+            {
+                fPlayer -= 0.05f + (float)Etime;
+            }
 
 
 
 
 
+            MRotX = functions.MRotateX(Theta);
 
+            MRotZ = functions.MRotateZ(Theta);
 
+            Vector4 Up =  new Vector4(0, 1, 0, 1);
+            Vector4 Target = new Vector4(0, 0, 1, 1);
+            Matrix4x4 CameraR = functions.MRotateY(fPlayer);
+            Look = functions.MMultVector(Target, CameraR);
+            Target = functions.addVector(Camera, Look);
 
-            // Rotation X
-            MRotX.M11 = 1;
-            MRotX.M22 = (float)Math.Cos(Theta * 0.5f);
-            MRotX.M23 = (float)Math.Sin(Theta * 0.5f);
-            MRotX.M32 = -(float)Math.Sin(Theta * 0.5f);
-            MRotX.M33 = (float)Math.Cos(Theta * 0.5f);
-            MRotX.M44 = 1;
+            Matrix4x4 mCamera = functions.MPointAt(Camera, Target, Up);
 
-            // Rotation Z
-            MRotZ.M11 = (float)Math.Cos(Theta);
-            MRotZ.M12 = (float)Math.Sin(Theta);
-            MRotZ.M21 = (float)-Math.Sin(Theta);
-            MRotZ.M22 = (float)Math.Cos(Theta);
-            MRotZ.M33 = 1;
-            MRotZ.M44 = 1;
-
+            Matrix4x4 mView = functions.M_QuickInverse(mCamera);
 
             List<trójkąt> Rastr = new List<trójkąt>();
+
             //rysowanie trójkątów
             foreach (trójkąt item in Cube)
             {
-                trójkąt Projected, Translated ,RotZX, RotZ;
+                trójkąt Projected, Translated ,RotZX, RotZ, Viewed;
                 RotZ = new trójkąt(new Vector4(0, 0, 0,0), new Vector4(0, 0, 0,0), new Vector4(0, 0, 0,0));
                 RotZX = new trójkąt(new Vector4(0, 0, 0,0), new Vector4(0, 0, 0,0), new Vector4(0, 0, 0,0));
+                Viewed = new trójkąt(new Vector4(0, 0, 0,0), new Vector4(0, 0, 0, 0), new Vector4(0, 0, 0, 0));
 
                 MatrixMnożenia1(MRotZ, item, RotZ);
 
@@ -250,6 +259,9 @@ namespace Projekt_2
 
                 //uleprzenie widoka figury
                 Vector4 norm, linefirst, linesecond;
+                 linefirst = new Vector4(0, 0, 0, 0);
+                 linesecond = new Vector4(0, 0, 0, 0);
+
                 linefirst.X = Translated.tlist[1].X - Translated.tlist[0].X;
                 linefirst.Y = Translated.tlist[1].Y - Translated.tlist[0].Y;
                 linefirst.Z = Translated.tlist[1].Z - Translated.tlist[0].Z;
@@ -258,24 +270,23 @@ namespace Projekt_2
                 linesecond.Y = Translated.tlist[2].Y - Translated.tlist[0].Y;
                 linesecond.Z = Translated.tlist[2].Z - Translated.tlist[0].Z;
 
-                norm.X = linefirst.Y * linesecond.Z - linefirst.Z * linesecond.Y;
-                norm.Y = linefirst.Z * linesecond.X - linefirst.X * linesecond.Z;
-                norm.Z = linefirst.X * linesecond.Y - linefirst.Y * linesecond.X;
+                norm = functions.VectorCrossProd(linefirst,linesecond);
 
-                float l = (float)Math.Sqrt(norm.X * norm.X + norm.Y * norm.Y + norm.Z * norm.Z);
-                norm.X /= l;norm.Y /= l; norm.Z /= l;
+                norm = functions.VNormalise(norm);
 
                 float scalar = norm.X * (Translated.tlist[0].X - Camera.X) + norm.Y * (Translated.tlist[0].Y - Camera.Y) + norm.Z * (Translated.tlist[0].Z - Camera.Z);
 
                 if (scalar < 0.0f)
                 {
                     Vector4 light = new Vector4(0.0f, -1.0f, -1.0f, 1.0f);
-                    float lightlength = (float)Math.Sqrt(light.X * light.X + light.Y * light.Y + light.Z * light.Z);
-                    light.X /= lightlength; light.Y /= lightlength; light.Z /= lightlength;
+                    light = functions.VNormalise(light);
 
                     float m = norm.X * light.X + norm.Y * light.Y + norm.Z * light.Z;
 
-                    MatrixMnożenia1(matrixProj, Translated, Projected);
+
+                    MatrixMnożenia1(mView, Translated, Viewed);
+
+                    MatrixMnożenia1(matrixProj, Viewed, Projected);
 
 
                     Scale(Projected);
@@ -283,10 +294,7 @@ namespace Projekt_2
                     Projected.m = m;
 
                     Rastr.Add(Projected);
-                    ////rysowanie
-                    //Line.Przyrostowy(bm, (int)Projected.tlist[0].X, (int)Projected.tlist[0].Y, (int)Projected.tlist[1].X, (int)Projected.tlist[1].Y);
-                    //Line.Przyrostowy(bm, (int)Projected.tlist[1].X, (int)Projected.tlist[1].Y, (int)Projected.tlist[2].X, (int)Projected.tlist[2].Y);
-                    //Line.Przyrostowy(bm, (int)Projected.tlist[2].X, (int)Projected.tlist[2].Y, (int)Projected.tlist[0].X, (int)Projected.tlist[0].Y);
+                  
                 }
                
             }
@@ -296,7 +304,7 @@ namespace Projekt_2
 
 
                 FillFigure(tri, bm);
-                //DrawTriangle(triProject, bp);
+               
 
 
             }
