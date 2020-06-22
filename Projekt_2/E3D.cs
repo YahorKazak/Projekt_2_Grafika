@@ -10,6 +10,32 @@ using System.Windows.Input;
 
 namespace Projekt_2
 {
+    //создание треугольника
+    public class trójkąt : IComparable<trójkąt>
+    {
+        internal float m;
+        public Vector4[] tlist;
+        public trójkąt(Vector4 first, Vector4 second, Vector4 third)
+        {
+            tlist = new Vector4[3];
+            tlist[0] = first;
+            tlist[1] = second;
+            tlist[2] = third;
+
+
+
+        }
+
+        public int CompareTo(trójkąt other)
+        {
+            float first = (tlist[0].Z + tlist[1].Z + tlist[2].Z) / 3.0f;
+            float second = (other.tlist[0].Z + other.tlist[1].Z + other.tlist[2].Z) / 3.0f;
+
+            return second.CompareTo(first);
+
+            throw new NotImplementedException();
+        }
+    }
     class E3D
     {
        DrawL Line = new DrawL();
@@ -81,32 +107,8 @@ namespace Projekt_2
 
 
 
-           //создание треугольника
-           public   class trójkąt : IComparable<trójkąt>
-        {
-            internal float m;
-            public Vector4[] tlist;
-            public trójkąt(Vector4 first, Vector4 second,Vector4 third)
-            {
-                tlist = new Vector4[3];
-                tlist[0]=first;
-                tlist[1]=second;
-                tlist[2]=third;               
-
-
-
-            }
-
-            public int CompareTo(trójkąt other)
-            {
-                float first = (tlist[0].Z + tlist[1].Z + tlist[2].Z) / 3.0f;
-                float second = (other.tlist[0].Z + other.tlist[1].Z + other.tlist[2].Z) / 3.0f;
-
-                return second.CompareTo(first);
-
-                throw new NotImplementedException();
-            }
-        }
+           
+           
 
 
         //фигура из треугольников
@@ -114,27 +116,30 @@ namespace Projekt_2
         public E3D(PictureBox image)
         {
             this.pb = image;
+            Camera = new Vector4(0,0,0,1);
+            Blender blender = new Blender();
+            blender.LoadFigure();
             //Camera = new Vector4(0, 0, 0,0);
-            Cube = new List<trójkąt>();
+            Cube = blender.Figures;
 
-            //координаты точек куба
-            Cube.Add(new trójkąt( new Vector4(0, 0, 0,1), new Vector4(0, 1, 0,1),  new Vector4(1, 1, 0,1)));
-            Cube.Add(new trójkąt(new Vector4(0, 0, 0,1), new Vector4(1, 1, 0,1), new Vector4(1, 0, 0,1)));
+            ////координаты точек куба
+            //Cube.Add(new trójkąt( new Vector4(0, 0, 0,1), new Vector4(0, 1, 0,1),  new Vector4(1, 1, 0,1)));
+            //Cube.Add(new trójkąt(new Vector4(0, 0, 0,1), new Vector4(1, 1, 0,1), new Vector4(1, 0, 0,1)));
 
-            Cube.Add(new trójkąt(new Vector4(1, 0, 0,1), new Vector4(1, 1, 0,1), new Vector4(1, 1, 1,1)));
-            Cube.Add(new trójkąt(new Vector4(1, 0, 0,1), new Vector4(1, 1, 1,1), new Vector4(1, 0, 1,1)));
+            //Cube.Add(new trójkąt(new Vector4(1, 0, 0,1), new Vector4(1, 1, 0,1), new Vector4(1, 1, 1,1)));
+            //Cube.Add(new trójkąt(new Vector4(1, 0, 0,1), new Vector4(1, 1, 1,1), new Vector4(1, 0, 1,1)));
 
-            Cube.Add(new trójkąt(new Vector4(1f, 0f, 1f,1), new Vector4(1f, 1f, 1f,1), new Vector4(0f, 1f, 1f,1)));
-            Cube.Add(new trójkąt(new Vector4(1f, 0f, 1f,1), new Vector4(0f, 1f, 1f,1), new Vector4(0f, 0f, 1f,1)));
+            //Cube.Add(new trójkąt(new Vector4(1f, 0f, 1f,1), new Vector4(1f, 1f, 1f,1), new Vector4(0f, 1f, 1f,1)));
+            //Cube.Add(new trójkąt(new Vector4(1f, 0f, 1f,1), new Vector4(0f, 1f, 1f,1), new Vector4(0f, 0f, 1f,1)));
 
-            Cube.Add(new trójkąt(new Vector4(0f, 0f, 1f,1), new Vector4(0f, 1f, 1f,1), new Vector4(0f, 1f, 0f,1)));
-            Cube.Add(new trójkąt(new Vector4(0f, 0f, 1f,1), new Vector4(0f, 1f, 0f,1), new Vector4(0f, 0f, 0f,1)));
+            //Cube.Add(new trójkąt(new Vector4(0f, 0f, 1f,1), new Vector4(0f, 1f, 1f,1), new Vector4(0f, 1f, 0f,1)));
+            //Cube.Add(new trójkąt(new Vector4(0f, 0f, 1f,1), new Vector4(0f, 1f, 0f,1), new Vector4(0f, 0f, 0f,1)));
 
-            Cube.Add(new trójkąt(new Vector4(0f, 1f, 0f,1), new Vector4(0f, 1f, 1f,1), new Vector4(1f, 1f, 1f,1)));
-            Cube.Add(new trójkąt(new Vector4(0f, 1f, 0f,1), new Vector4(1f, 1f, 1f,1), new Vector4(1f, 1f, 0f,1)));
+            //Cube.Add(new trójkąt(new Vector4(0f, 1f, 0f,1), new Vector4(0f, 1f, 1f,1), new Vector4(1f, 1f, 1f,1)));
+            //Cube.Add(new trójkąt(new Vector4(0f, 1f, 0f,1), new Vector4(1f, 1f, 1f,1), new Vector4(1f, 1f, 0f,1)));
 
-            Cube.Add(new trójkąt(new Vector4(1f, 0f, 1f,1), new Vector4(0f, 0f, 1f,1), new Vector4(0f, 0f, 0f,1)));
-            Cube.Add(new trójkąt(new Vector4(1f, 0f, 1f,1), new Vector4(0f, 0f, 0f,1), new Vector4(1f, 0f, 0f,1)));
+            //Cube.Add(new trójkąt(new Vector4(1f, 0f, 1f,1), new Vector4(0f, 0f, 1f,1), new Vector4(0f, 0f, 0f,1)));
+            //Cube.Add(new trójkąt(new Vector4(1f, 0f, 1f,1), new Vector4(0f, 0f, 0f,1), new Vector4(1f, 0f, 0f,1)));
 
             //matrixProj
             float fN = 0.1f;

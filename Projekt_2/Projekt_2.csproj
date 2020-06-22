@@ -50,6 +50,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Blender.cs" />
     <Compile Include="DrawL.cs" />
     <Compile Include="E3D.cs" />
     <Compile Include="Form1.cs">
