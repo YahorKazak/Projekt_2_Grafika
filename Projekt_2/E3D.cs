@@ -177,22 +177,22 @@ namespace Projekt_2
             double Etime = time.TotalMilliseconds / 1000;
 
 
-            //Theta += 0.5f * (float)Etime;
+            Theta += 0.5f * (float)Etime;
 
-            if ((Keyboard.GetKeyStates(Key.Up) & KeyStates.Down) > 0)
+            if ((Keyboard.GetKeyStates(Key.Down) & KeyStates.Down) > 0)
             {
                 Camera.Y += 0.01f + (float)Etime;
             }
-            if ((Keyboard.GetKeyStates(Key.Down) & KeyStates.Down) > 0)
+            if ((Keyboard.GetKeyStates(Key.Up) & KeyStates.Down) > 0)
             {
                 Camera.Y -= 0.01f + (float)Etime;
             }
 
-            if ((Keyboard.GetKeyStates(Key.Left) & KeyStates.Down) > 0)
+            if ((Keyboard.GetKeyStates(Key.Right) & KeyStates.Down) > 0)
             {
                 Camera.X += 0.01f + (float)Etime;
             }
-            if ((Keyboard.GetKeyStates(Key.Right) & KeyStates.Down) > 0)
+            if ((Keyboard.GetKeyStates(Key.Left) & KeyStates.Down) > 0)
             {
                 Camera.X -= 0.01f + (float)Etime;
             }
@@ -286,14 +286,26 @@ namespace Projekt_2
 
                     MatrixMnożenia1(mView, Translated, Viewed);
 
-                    MatrixMnożenia1(matrixProj, Viewed, Projected);
+
+                    int ClippedT = 0;
+                    trójkąt[] cliped = new trójkąt[2] { new trójkąt(new Vector4(0, 0, 0, 1), new Vector4(0, 0, 0, 1), new Vector4(0, 0, 0, 1)), new trójkąt(new Vector4(0, 0, 0, 1), new Vector4(0, 0, 0, 1), new Vector4(0, 0, 0, 1)) }; ;
+                    Vector4 p_p = new Vector4(0.0f, 0.0f, 0.1f, 1.0f);
+                    Vector4 p_n = new Vector4(0.0f, 0.0f, 1.0f, 1.0f);
+                    ClippedT = functions.TClipAgainstPlane(p_p, p_n, Viewed, ref cliped[0], ref cliped[1]);
+                    for (int i = 0; i < ClippedT; i++)
+                    {
+
+                        MatrixMnożenia1(matrixProj, cliped[i], Projected);
 
 
-                    Scale(Projected);
+                        Scale(Projected);
 
-                    Projected.m = m;
+                        Projected.m = m;
 
-                    Rastr.Add(Projected);
+                        Rastr.Add(Projected);
+                    }
+                        
+                    
                   
                 }
                

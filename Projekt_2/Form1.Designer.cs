@@ -34,7 +34,7 @@
             // 
             // pictureBoxFirst
             // 
-            this.pictureBoxFirst.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.pictureBoxFirst.BackColor = System.Drawing.SystemColors.ControlText;
             this.pictureBoxFirst.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxFirst.Name = "pictureBoxFirst";
             this.pictureBoxFirst.Size = new System.Drawing.Size(1140, 745);

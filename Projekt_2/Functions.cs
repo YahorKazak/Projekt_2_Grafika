@@ -9,6 +9,14 @@ namespace Projekt_2
 {
     class Functions
     {
+        public Vector4 mulVector(Vector4 v1,float x)
+        {
+            Vector4 v = new Vector4();
+            v.X = v1.X * x;
+            v.Y = v1.Y * x;
+            v.Z = v1.Z * x;
+            return v;
+        }
         public Vector4 addVector(Vector4 v1, Vector4 v2)
         {
             Vector4 v = new Vector4();
@@ -198,6 +206,88 @@ namespace Projekt_2
             matrix.M44 = 1.0f;
             return matrix;
         }
+
+        public Vector4 V_IntersectPlane(Vector4 p_p ,Vector4 p_n , Vector4 lineStart , Vector4 lineEnd)
+        {
+            p_n = VNormalise(p_n);
+            float p_d = -VectordotProduct(p_n, p_p);
+            float ad = VectordotProduct(lineStart, p_n);
+            float bd = VectordotProduct(lineEnd, p_n);
+            float t = (-p_d - ad) / (bd - ad);
+            Vector4 lineatStarttoEnd = subVector(lineEnd, lineStart);
+            Vector4 lineToInter = mulVector(lineatStarttoEnd, t);
+            return addVector(lineStart, lineToInter);
+        }
+
+        public int TClipAgainstPlane(Vector4 plane_p, Vector4 plane_n, trójkąt in_tri, ref trójkąt out_tri1, ref trójkąt out_tri2)
+        {
+            plane_n = VNormalise(plane_n);
+
+            Vector4[] insidePoints = new Vector4[3];
+            Vector4[] outsidePoints = new Vector4[3];
+            int nInsidePointCount = 0;
+            int noutsidePointsCount = 0;
+
+            float d0 = distans(in_tri.tlist[0], plane_n, plane_p);
+            float d1 = distans(in_tri.tlist[1], plane_n, plane_p);
+            float d2 = distans(in_tri.tlist[2], plane_n, plane_p);
+
+            if (d0 >= 0) { insidePoints[nInsidePointCount++] = in_tri.tlist[0]; }
+            else { outsidePoints[noutsidePointsCount++] = in_tri.tlist[0]; }
+            if (d1 >= 0) { insidePoints[nInsidePointCount++] = in_tri.tlist[1]; }
+            else { outsidePoints[noutsidePointsCount++] = in_tri.tlist[1]; }
+            if (d2 >= 0) { insidePoints[nInsidePointCount++] = in_tri.tlist[2]; }
+            else { outsidePoints[noutsidePointsCount++] = in_tri.tlist[2]; }
+
+            if (nInsidePointCount == 0)
+            {
+                return 0;
+            }
+
+            if (nInsidePointCount == 3)
+            {
+
+                out_tri1 = in_tri;
+
+                return 1;
+            }
+
+            if (nInsidePointCount == 1 && noutsidePointsCount == 2)
+            {
+
+                out_tri1.tlist[0] = insidePoints[0];
+
+                out_tri1.tlist[1] = V_IntersectPlane(plane_p, plane_n, insidePoints[0], outsidePoints[0]);
+                out_tri1.tlist[2] = V_IntersectPlane(plane_p, plane_n, insidePoints[0], outsidePoints[1]);
+
+                return 1;
+            }
+
+            if (nInsidePointCount == 2 && noutsidePointsCount == 1)
+            {
+                out_tri1.tlist[0] = insidePoints[0];
+                out_tri1.tlist[1] = insidePoints[1];
+                out_tri1.tlist[2] = V_IntersectPlane(plane_p, plane_n, insidePoints[0], outsidePoints[0]);
+
+
+                out_tri2.tlist[0] = insidePoints[1];
+                out_tri2.tlist[1] = out_tri1.tlist[2];
+                out_tri2.tlist[2] = V_IntersectPlane(plane_p, plane_n, insidePoints[1], outsidePoints[0]);
+
+                return 2;
+            }
+            return 0;
+        }
+
+
+        public float distans(Vector4 p, Vector4 plane_n, Vector4 plane_p)
+        {
+            return plane_n.X * p.X + plane_n.Y * p.Y + plane_n.Z * p.Z - VectordotProduct(plane_n, plane_p);
+
+        }
+
+
+
 
 
     }
