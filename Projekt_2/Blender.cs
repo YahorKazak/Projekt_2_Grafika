@@ -9,6 +9,7 @@ using System.IO;
 
 namespace Projekt_2
 {
+    //sczytuje dane figur z pliku
     class Blender
     {
         public List<trójkąt> Figures = new List<trójkąt>();
@@ -57,8 +58,7 @@ namespace Projekt_2
                 int v2Index = singleTriangleIndex[1];
                 int v3Index = singleTriangleIndex[2];
 
-                trójkąt tr = new trójkąt(new Vector4(verticies[v1Index], 0f), new Vector4(verticies[v2Index], 0f), new Vector4(verticies[v3Index], 0f));
-                //Triangle tr = new Triangle(verticies[v1Index], verticies[v2Index], verticies[v3Index]);
+                trójkąt tr = new trójkąt(new Vector4(verticies[v1Index], 0f), new Vector4(verticies[v2Index], 0f), new Vector4(verticies[v3Index], 0f));                
                 Figures.Add(tr);
 
             }

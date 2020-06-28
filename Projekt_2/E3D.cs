@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace Projekt_2
 {
-    //создание треугольника
+    //klasa trójkąta
     public class trójkąt : IComparable<trójkąt>
     {
         internal float m;
@@ -21,11 +21,8 @@ namespace Projekt_2
             tlist[0] = first;
             tlist[1] = second;
             tlist[2] = third;
-
-
-
         }
-
+        //sortowanie trójkątów według algorytma malarskiego
         public int CompareTo(trójkąt other)
         {
             float first = (tlist[0].Z + tlist[1].Z + tlist[2].Z) / 3.0f;
@@ -50,25 +47,9 @@ namespace Projekt_2
         float fPlayer;
 
 
-        //private void MatrixMnożenia(Matrix4x4 matrixProj, Vector4 x, Vector4 y)
-        //{
-        //    y.X = (x.X * matrixProj.M11 + x.Y * matrixProj.M21 + x.Z * matrixProj.M31 + matrixProj.M41);
-        //    y.Y = (x.X * matrixProj.M12 + x.Y * matrixProj.M22 + x.Z * matrixProj.M32 + matrixProj.M42);
-        //    y.Z = x.X * matrixProj.M13 + x.Y * matrixProj.M23 + x.Z * matrixProj.M33 + matrixProj.M43;
-
-        //    float width = x.X * matrixProj.M14 + x.Y * matrixProj.M24 + x.Z * matrixProj.M34 + matrixProj.M44;
-
-        //    if (width != 0.0f)
-        //    {
-        //        y.X /= width;
-        //        y.Y /= width;
-        //        y.Z /= width;
-        //    }
-
-        //}
-
-        //konwertowanie trójkąta na ekran za pomocą Mproj 
-        private void MatrixMnożenia1(Matrix4x4 matrixProj, trójkąt x, trójkąt y)
+        
+        //projekcja trójkąta
+        private void MatrixMnożenia(Matrix4x4 matrixProj, trójkąt x, trójkąt y)
            {
             for (int i = 0; i < 3; i++)
             {
@@ -85,7 +66,7 @@ namespace Projekt_2
             }
            }
            
-           //Przyblizenie
+           //Przyblizenie według osi z
            private void TranslatedZ(trójkąt y,trójkąt x)
            {
             for (int i = 0; i < 3; i++)
@@ -94,7 +75,7 @@ namespace Projekt_2
             }
            }
 
-            //Coordinates x i y
+            //skalowanie x i y
             private void Scale(trójkąt x)
            {
              for (int i = 0; i < 3; i++)
@@ -113,25 +94,28 @@ namespace Projekt_2
            
 
 
-        //фигура из треугольников
-        List<trójkąt> Cube;
+        //figura
+        List<trójkąt> figury;
         public E3D(PictureBox image)
         {
+            //zapisywanie fugur do listy
             this.pb = image;
             Camera = new Vector4(0,0,0,1);
             Blender blender = new Blender();
             blender.LoadFigure();        
-            Cube = blender.Figures;
-        
-            //matrixProj
+            figury = blender.Figures;
+
+            //macierz projekcyi
             float fN = 0.1f;
-            float fFr = 1000.0f;
+            float fFr = 100.0f;
             float fFv = 90.0f;
             float fAspctRat= (float)image.Height / (float)image.Width;
 
             matrixProj =  functions.MProjection(fFv, fAspctRat, fN, fFr);
            
         }
+
+        //cieniowanie i malowanie fugur za pomocą algorytma malarskiego
         public void FillFigure(trójkąt trójkąt, Bitmap bm)
         {
             float m = trójkąt.m;
@@ -179,6 +163,8 @@ namespace Projekt_2
 
             Theta += 0.5f * (float)Etime;
 
+
+            //obracanie sciany
             if ((Keyboard.GetKeyStates(Key.Down) & KeyStates.Down) > 0)
             {
                 Camera.Y += 0.01f + (float)Etime;
@@ -197,8 +183,10 @@ namespace Projekt_2
                 Camera.X -= 0.01f + (float)Etime;
             }
 
-            Vector4 Moving = Look * (8.0f * (float)Etime);
 
+
+            Vector4 Moving = Look * (8.0f * (float)Etime);
+            //obracanie kamery
             if ((Keyboard.GetKeyStates(Key.W) & KeyStates.Down) > 0)
             {
                 Camera = functions.addVector(Camera, Moving);
@@ -207,8 +195,6 @@ namespace Projekt_2
             {
                 Camera = functions.subVector(Camera, Moving);
             }
-
-
             if ((Keyboard.GetKeyStates(Key.A) & KeyStates.Down) > 0)
             {
                 fPlayer += 0.05f + (float)Etime;
@@ -226,6 +212,8 @@ namespace Projekt_2
 
             MRotZ = functions.MRotateZ(Theta);
 
+
+            //camera
             Vector4 Up =  new Vector4(0, 1, 0, 1);
             Vector4 Target = new Vector4(0, 0, 1, 1);
             Matrix4x4 CameraR = functions.MRotateY(fPlayer);
@@ -239,28 +227,28 @@ namespace Projekt_2
             List<trójkąt> Rastr = new List<trójkąt>();
 
             //rysowanie trójkątów
-            foreach (trójkąt item in Cube)
+            foreach (trójkąt item in figury)
             {
                 trójkąt Projected, Translated ,RotZX, RotZ, Viewed;
                 RotZ = new trójkąt(new Vector4(0, 0, 0,0), new Vector4(0, 0, 0,0), new Vector4(0, 0, 0,0));
                 RotZX = new trójkąt(new Vector4(0, 0, 0,0), new Vector4(0, 0, 0,0), new Vector4(0, 0, 0,0));
                 Viewed = new trójkąt(new Vector4(0, 0, 0,0), new Vector4(0, 0, 0, 0), new Vector4(0, 0, 0, 0));
 
-                MatrixMnożenia1(MRotZ, item, RotZ);
+                MatrixMnożenia(MRotZ, item, RotZ);
 
-                MatrixMnożenia1(MRotX, RotZ, RotZX);
+                MatrixMnożenia(MRotX, RotZ, RotZX);
 
-                //przyblizenie zeby widzeć fuguru
+                //przyblizenie zeby widzeć fugurę
                 Translated = RotZX;
                 TranslatedZ(Translated, RotZX);
 
                 Projected = new trójkąt(new Vector4(0,0,0,0), new Vector4(0, 0, 0,0), new Vector4(0, 0, 0,0));
 
 
-                //uleprzenie widoka figury
+                //uleprzenie widoka figury aby figury nie były przezroczyste
                 Vector4 norm, linefirst, linesecond;
-                 linefirst = new Vector4(0, 0, 0, 0);
-                 linesecond = new Vector4(0, 0, 0, 0);
+                linefirst = new Vector4(0, 0, 0, 0);
+                linesecond = new Vector4(0, 0, 0, 0);
 
                 linefirst.X = Translated.tlist[1].X - Translated.tlist[0].X;
                 linefirst.Y = Translated.tlist[1].Y - Translated.tlist[0].Y;
@@ -278,24 +266,25 @@ namespace Projekt_2
 
                 if (scalar < 0.0f)
                 {
+                    //pozycja swiatła
                     Vector4 light = new Vector4(0.0f, -1.0f, -1.0f, 1.0f);
                     light = functions.VNormalise(light);
 
                     float m = norm.X * light.X + norm.Y * light.Y + norm.Z * light.Z;
 
 
-                    MatrixMnożenia1(mView, Translated, Viewed);
+                    MatrixMnożenia(mView, Translated, Viewed);
 
 
                     int ClippedT = 0;
                     trójkąt[] cliped = new trójkąt[2] { new trójkąt(new Vector4(0, 0, 0, 1), new Vector4(0, 0, 0, 1), new Vector4(0, 0, 0, 1)), new trójkąt(new Vector4(0, 0, 0, 1), new Vector4(0, 0, 0, 1), new Vector4(0, 0, 0, 1)) }; ;
                     Vector4 p_p = new Vector4(0.0f, 0.0f, 0.1f, 1.0f);
                     Vector4 p_n = new Vector4(0.0f, 0.0f, 1.0f, 1.0f);
-                    ClippedT = functions.TClipAgainstPlane(p_p, p_n, Viewed, ref cliped[0], ref cliped[1]);
+                    ClippedT = functions.TClipPlane(p_p, p_n, Viewed, ref cliped[0], ref cliped[1]);
                     for (int i = 0; i < ClippedT; i++)
                     {
 
-                        MatrixMnożenia1(matrixProj, cliped[i], Projected);
+                        MatrixMnożenia(matrixProj, cliped[i], Projected);
 
 
                         Scale(Projected);

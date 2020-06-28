@@ -61,15 +61,7 @@ namespace Projekt_2
             return v;
         }
 
-        public Matrix4x4 MatrixIdentity()
-        {
-            Matrix4x4 mat = new Matrix4x4();
-            mat.M11 = 1.0f;
-            mat.M22 = 1.0f;
-            mat.M33 = 1.0f;
-            mat.M44 = 1.0f;
-            return mat;
-        }
+      
 
         public Matrix4x4 MRotateX(float Theta)
         {
@@ -107,19 +99,7 @@ namespace Projekt_2
             return mat;
         }
 
-        public Matrix4x4 MTranslation(float x, float y, float z)
-        {
-            Matrix4x4 mat = new Matrix4x4(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-            mat.M11 = 1.0f;
-            mat.M22 = 1.0f;
-            mat.M33 = 1.0f;
-            mat.M44 = 1.0f;
-            mat.M41 = x;
-            mat.M42 = y;
-            mat.M43 = z;
-
-            return mat;
-        }
+       
 
         public Matrix4x4 MProjection(float fFv, float fAspctRat, float fN, float fFr)
         {
@@ -219,7 +199,7 @@ namespace Projekt_2
             return addVector(lineStart, lineToInter);
         }
 
-        public int TClipAgainstPlane(Vector4 plane_p, Vector4 plane_n, trójkąt in_tri, ref trójkąt out_tri1, ref trójkąt out_tri2)
+        public int TClipPlane(Vector4 plane_p, Vector4 plane_n, trójkąt in_tri, ref trójkąt out_tri1, ref trójkąt out_tri2)
         {
             plane_n = VNormalise(plane_n);
 
